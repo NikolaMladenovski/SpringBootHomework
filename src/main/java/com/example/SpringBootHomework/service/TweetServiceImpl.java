@@ -50,12 +50,12 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public void updateTweetContent(Long tweetId, Tweet tweet) throws TweetNotFoundException {
+    public void updateTweetContent(Long tweetId, String newTweetContent) throws TweetNotFoundException {
         Optional<Tweet> foundTweet = tweetRepository.findById(tweetId);
         if (!foundTweet.isPresent()) {
             throw new TweetNotFoundException();
         }
-        foundTweet.get().setContent(tweet.getContent());
+        foundTweet.get().setContent(newTweetContent);
         tweetRepository.save(foundTweet.get());
     }
 

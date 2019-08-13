@@ -42,8 +42,8 @@ public class UserRestController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUserPassword(@RequestParam(value = "userId") Long userId, @RequestParam(value = "user") User user) {
-        userService.updateUserPassword(userId, user);
+    public ResponseEntity<?> updateUserPassword(@RequestParam(value = "userId") Long userId, @RequestParam(value = "newUserPassword") String newUserPassword) {
+        userService.updateUserPassword(userId, newUserPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

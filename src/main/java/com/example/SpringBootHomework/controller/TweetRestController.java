@@ -40,8 +40,8 @@ public class TweetRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> updateTweetContent(@RequestParam(value = "tweetId") Long tweetId, @RequestParam(value = "tweet") Tweet tweet) {
-        tweetService.updateTweetContent(tweetId, tweet);
+    public ResponseEntity<?> updateTweetContent(@RequestParam(value = "tweetId") Long tweetId, @RequestParam(value = "newTweetContent") String newTweetContent) {
+        tweetService.updateTweetContent(tweetId, newTweetContent);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

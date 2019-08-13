@@ -52,12 +52,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserPassword(Long userId, User user) throws UserNotFoundException {
+    public void updateUserPassword(Long userId, String newPassword) throws UserNotFoundException {
         Optional<User> foundUser = userRepository.findById(userId);
         if (!foundUser.isPresent()) {
             throw new UserNotFoundException();
         }
-        foundUser.get().setPassword(user.getPassword());
+        foundUser.get().setPassword(newPassword);
         userRepository.save(foundUser.get());
     }
 

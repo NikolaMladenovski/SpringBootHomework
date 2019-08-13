@@ -12,7 +12,7 @@ public interface TweetService {
 
     Set<User> getUsersThatTweetedLastMonth();
 
-    void updateTweetContent(Long tweetId, Tweet tweet);
+    void updateTweetContent(Long tweetId, String newTweetContent);
 
     void deleteTweetsForUser(User user);
 }

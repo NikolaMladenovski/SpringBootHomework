@@ -11,6 +11,6 @@ public interface UserService {
     Set<Tweet> getUserTweets(Long userId);
     Set<Tweet> getUserTweetsForGivenDate(Long userId, LocalDate date);
     User saveUser(User user);
-    void updateUserPassword(Long userId,User user);
+    void updateUserPassword(Long userId,String newPassword);
     void deleteUser(Long userId);
 }
