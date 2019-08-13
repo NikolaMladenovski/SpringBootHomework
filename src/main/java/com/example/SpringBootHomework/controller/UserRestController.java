@@ -23,7 +23,7 @@ public class UserRestController {
     }
 
 
-    @GetMapping
+    @GetMapping(value = "/getUserTweets")
     public ResponseEntity<?> getUserTweets(@RequestParam(value = "userId") Long userId) {
         Set<Tweet> tweets = userService.getUserTweets(userId);
         return new ResponseEntity<>(tweets, HttpStatus.OK);
@@ -47,7 +47,7 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @DeleteMapping(value = "/deleteUser")
     public ResponseEntity<?> deleteUser(@RequestParam(value = "userId") Long userId) {
         userService.deleteUser(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

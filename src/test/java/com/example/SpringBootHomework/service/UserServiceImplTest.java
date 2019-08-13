@@ -35,7 +35,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void getUserTweets() {
+    public void shouldGetUserTweets() {
         User user = new User("nikola", "pass", "nikola@feit.com");
         Tweet tweet1 = new Tweet("tweet1");
         Tweet tweet2 = new Tweet("tweet2");
@@ -51,7 +51,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void getUserTweetsForGivenDate() {
+    public void shouldGetUserTweetsForGivenDate() {
         User nikola = new User("nikola", "pass", "nikola@yahoo.com");
 
 
@@ -78,7 +78,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void saveUser() {
+    public void shouldSaveUser() {
         User user = new User("nikola", "pass", "nikola@yahoo.com ");
         Mockito.when(userRepository.save(user)).thenReturn(user);
 
@@ -88,7 +88,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void updateUserPassword() {
+    public void shouldUpdateUserPassword() {
         User user = new User("tviteras", "pass", "nikola@yahoo.com");
         Mockito.when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
         String newUserPassword = "newPass";
@@ -98,7 +98,7 @@ public class UserServiceImplTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void deleteUser() {
+    public void shouldDeleteUser() {
         User user = new User("tviteras", "pass", "nikola@yahoo.com");
         userRepository.save(user);
         userServiceImpl.deleteUser(user.getId());
