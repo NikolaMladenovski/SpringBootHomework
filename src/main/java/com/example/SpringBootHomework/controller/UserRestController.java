@@ -5,12 +5,14 @@ import com.example.SpringBootHomework.model.User;
 import com.example.SpringBootHomework.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Set;
 
+@RestController
 @RequestMapping(value = "/api/user")
 public class UserRestController {
     private final UserService userService;
@@ -23,7 +25,7 @@ public class UserRestController {
     }
 
 
-    @GetMapping(value = "/getUserTweets")
+    @GetMapping(value = "/getUserTweets", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUserTweets(@RequestParam(value = "userId") Long userId) {
         Set<Tweet> tweets = userService.getUserTweets(userId);
         return new ResponseEntity<>(tweets, HttpStatus.OK);

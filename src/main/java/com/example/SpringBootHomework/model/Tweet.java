@@ -1,5 +1,6 @@
 package com.example.SpringBootHomework.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class Tweet {
     @Length(max = 120, message = "Max length is 120 characters")
     private String content;
     private LocalDate dateOfCreation = LocalDate.now();
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     private User user;
 
     public Tweet(String content) {

@@ -1,5 +1,6 @@
 package com.example.SpringBootHomework.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,8 @@ public class User {
     private String password;
     @Email(message = "You have to provide valid email address")
     private String email;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST,fetch =FetchType.EAGER)
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST,fetch =FetchType.LAZY)
     private Set<Tweet> listOfTweets = new HashSet<>();
 
     public User(String username, String password, String email) {
