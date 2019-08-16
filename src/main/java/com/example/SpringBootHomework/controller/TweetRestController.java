@@ -8,9 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Set;
 
-//@RestController
+@RestController
 @RequestMapping(value = "/api/tweet")
 public class TweetRestController {
     private final TweetService tweetService;
@@ -20,32 +21,32 @@ public class TweetRestController {
         this.tweetService = tweetService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/getTweetById")
     public ResponseEntity<?> getTweetById(@RequestParam(value = "tweetId") Long tweetId) {
         Tweet tweet = tweetService.getTweetById(tweetId);
         return new ResponseEntity<>(tweet, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> saveTweet(@RequestParam(value = "tweet") Tweet tweet) {
+    @PostMapping(value = "/saveTweet")
+    public ResponseEntity<?> saveTweet(@Valid @RequestBody Tweet tweet) {
         Tweet savedTweet = tweetService.saveTweet(tweet);
-        return new ResponseEntity<>(savedTweet, HttpStatus.OK);
+        return new ResponseEntity<>(savedTweet, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping(value = "/getUserTweetsFromLastMonth")
     public ResponseEntity<?> getUsersTweetedLastMonth() {
         Set<User> users = tweetService.getUsersThatTweetedLastMonth();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PutMapping(value = "/updateTweetContent")
     public ResponseEntity<?> updateTweetContent(@RequestParam(value = "tweetId") Long tweetId, @RequestParam(value = "newTweetContent") String newTweetContent) {
         tweetService.updateTweetContent(tweetId, newTweetContent);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteTweetsForUser(@RequestParam(value = "user") User user) {
+    @DeleteMapping(value = "/deleteUserTweets")
+    public ResponseEntity<?> deleteTweetsForUser(@RequestBody User user) {
         tweetService.deleteTweetsForUser(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

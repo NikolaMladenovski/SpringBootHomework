@@ -1,0 +1,23 @@
+### Common
+
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
+
+  datasource:
+    url: jdbc:h2:mem:dev_db
+
+---
+### IT profile
+spring:
+  profiles: it
+  datasource:
+    url: jdbc:h2:mem:it_db
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:h2:mem:dev_db
+  user:
+    password: defaulPassword
+

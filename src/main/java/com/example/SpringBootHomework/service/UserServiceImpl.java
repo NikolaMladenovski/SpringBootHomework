@@ -33,17 +33,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<Tweet> getUserTweetsForGivenDate(Long userId, LocalDate date) throws UserNotFoundException {
-        Optional<User> foundUser = userRepository.findById(userId);
-        if (!foundUser.isPresent()) {
-            throw new UserNotFoundException();
-        }
-        Set<Tweet> userTweetsForGivenDate = foundUser
-                .get()
-                .getListOfTweets()
-                .stream()
-                .filter(tweet -> tweet.getDateOfCreation().equals(date))
-                .collect(Collectors.toSet());
-        return userTweetsForGivenDate;
+            Optional<User> foundUser = userRepository.findById(userId);
+            if (!foundUser.isPresent()) {
+                throw new UserNotFoundException();
+            }
+            Set<Tweet> userTweetsForGivenDate = foundUser
+                    .get()
+                    .getListOfTweets()
+                    .stream()
+                    .filter(tweet -> tweet.getDateOfCreation().equals(date))
+                    .collect(Collectors.toSet());
+            return userTweetsForGivenDate;
     }
 
     @Override

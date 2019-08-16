@@ -23,8 +23,10 @@ public class Tweet {
     @NotBlank(message = "You have to provide content")
     @Length(max = 120, message = "Max length is 120 characters")
     private String content;
+
     private LocalDate dateOfCreation = LocalDate.now();
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     public Tweet(String content) {

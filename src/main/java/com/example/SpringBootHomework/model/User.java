@@ -28,8 +28,8 @@ public class User {
     private String password;
     @Email(message = "You have to provide valid email address")
     private String email;
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST,fetch =FetchType.LAZY)
+
+    @OneToMany(mappedBy = "user",fetch =FetchType.LAZY)
     private Set<Tweet> listOfTweets = new HashSet<>();
 
     public User(String username, String password, String email) {
