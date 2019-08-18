@@ -4,10 +4,11 @@ import com.example.SpringBootHomework.exception.TweetNotFoundException;
 import com.example.SpringBootHomework.model.Tweet;
 import com.example.SpringBootHomework.model.User;
 import com.example.SpringBootHomework.repository.TweetRepository;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
@@ -38,12 +39,18 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public Set<User> getUsersThatTweetedLastMonth() {
-        Set<Tweet> allTweets = (Set<Tweet>) tweetRepository.findAll();
-        Set<Tweet> allTweetsFromLastMonth = allTweets
-                .stream()
-                .filter(tweet -> tweet.getDateOfCreation().getMonth().equals(LocalDate.now().getMonth().minus(1)))
-                .collect(Collectors.toSet());
+    public Set<User> getUsersThatTweetedLastMonth() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        LocalDate now = LocalDate.now();
+        LocalDate start = now.minusMonths(1);
+        start=start.withDayOfMonth(1);
+        LocalDate end = now.withDayOfMonth(1);
+        //List<Tweet> allTweets = (Set<Tweet>) tweetRepository.findAll();
+        Set<Tweet> allTweetsFromLastMonth = tweetRepository.findAllByDateOfCreationBetween(simpleDateFormat.parse(start.toString()),simpleDateFormat.parse(end.toString()));
+//                .stream()
+//                .filter(tweet -> new java.sql.Date(tweet.getDateOfCreation().getTime())
+//                        .toLocalDate().equals(LocalDate.now().getMonth().minus(1)))
+//                .collect(Collectors.toSet());
         Set<User> allUsersThatTweetedLastMonth = allTweetsFromLastMonth.stream().map(Tweet::getUser).collect(Collectors.toSet());
         return allUsersThatTweetedLastMonth;
 
@@ -60,7 +67,7 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public void deleteTweetsForUser(User user) {
+        public void deleteTweetsForUser(User user) {
 
         tweetRepository.deleteAllByUser(user);
     }

@@ -8,23 +8,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("it")
 public class UserRestControllerTest {
     private static final String URL_GET_USER_TWEETS = "/api/user/getUserTweets";
     private static final String URL_DELETE_USER = "/api/user/deleteUser";
@@ -61,16 +58,17 @@ public class UserRestControllerTest {
 
     @Autowired
     private TweetRepository tweetRepository;
+
     @Before
     public void setUp() {
         gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
-    //todo
+
     @Test
     public void getUserTweets() throws Exception {
         User nikola = new User("nikola12345", "pass", "nikola@yahoo.com");
-        nikola.setId(1L);
+        nikola.setId(5L);
         userRepository.save(nikola);
         Tweet tweet1 = new Tweet("tweet1 content");
 
@@ -80,14 +78,13 @@ public class UserRestControllerTest {
         nikola.getListOfTweets().add(tweet2);
         tweet1.setUser(nikola);
         tweet2.setUser(nikola);
+        tweet1.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 7, 25)));
+        tweet2.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 8, 15)));
         tweetRepository.save(tweet1);
         tweetRepository.save(tweet2);
 
         Set<Tweet> expectedTweets = Stream.of(tweet1, tweet2).collect(Collectors.toSet());
 
-       // String jsonUserExpectedTweets = gson.toJson(expectedTweets);
-
-        //System.out.println(jsonUserExpectedTweets);
         MvcResult mvcResult = mockMvc.perform(get(URL_GET_USER_TWEETS)
                 .param("userId", nikola.getId().toString()))
                 .andExpect(status().isOk())
@@ -95,34 +92,54 @@ public class UserRestControllerTest {
                 .andReturn();
 
         String foundUserJson = mvcResult.getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Tweet[] foundTweets = objectMapper.readValue(foundUserJson, Tweet[].class);
         System.out.println(foundUserJson);
+
+        Assert.assertEquals(expectedTweets.size(), foundTweets.length);
 
     }
 
-    //todo
+
     @Test
     public void getUserTweetsForGivenDate() throws Exception {
-        User nikola = new User("nikola", "pass", "nikola@yahoo.com");
-        nikola.setId(10L);
+        User nikola = new User("nikola123213", "pass", "nikola@yahoo.com");
+       // nikola.setId(10L);
         Tweet tweet1 = new Tweet("content1");
         Tweet tweet2 = new Tweet("content2");
         Tweet tweet3 = new Tweet("content3");
 
-        tweet1.setDateOfCreation(LocalDate.of(2019, 7, 25));
-        tweet2.setDateOfCreation(LocalDate.of(2019, 8, 15));
-        tweet3.setDateOfCreation(LocalDate.of(2019, 8, 15));
+        tweet1.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 7, 25)));
+        tweet2.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 8, 15)));
+        tweet3.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 8, 15)));
+
+
 
         nikola.getListOfTweets().add(tweet1);
         nikola.getListOfTweets().add(tweet2);
         nikola.getListOfTweets().add(tweet3);
+        userRepository.save(nikola);
+        tweet1.setUser(nikola);
+        tweet2.setUser(nikola);
+        tweet3.setUser(nikola);
 
-//        userRepository.save(nikola);
-//
-//        mockMvc.perform(get(URL_GET_USER_TWEETS_FOR_DATE)
-//        .param("userId",nikola.getId().toString())
-//        .param("date",LocalDate.of(2019,8,15).toString()))
-//                .andExpect(status().isOk());
+        tweetRepository.save(tweet1);
+        tweetRepository.save(tweet2);
+        tweetRepository.save(tweet3);
 
+
+        MvcResult mvcResult =  mockMvc.perform(get(URL_GET_USER_TWEETS_FOR_DATE)
+                .param("userId", nikola.getId().toString())
+                .param("date", Date.valueOf(LocalDate.of(2019, 8, 15)).toString()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String foundUserJson = mvcResult.getResponse().getContentAsString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Tweet[] foundTweets = objectMapper.readValue(foundUserJson, Tweet[].class);
+        System.out.println(foundUserJson);
+
+        Assert.assertEquals(2, foundTweets.length);
 
 
     }

@@ -4,15 +4,12 @@ import com.example.SpringBootHomework.model.Tweet;
 import com.example.SpringBootHomework.model.User;
 import com.example.SpringBootHomework.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
+import java.text.ParseException;
 import java.util.Set;
 
 
@@ -35,7 +32,8 @@ public class UserRestController {
     }
 
     @GetMapping(value = "/getUserTweetsForDate")
-    public ResponseEntity<?> getUserTweetsForGivenDate(@RequestParam(value = "userId") Long userId, @RequestParam(value = "date") LocalDate date) {
+    public ResponseEntity<?> getUserTweetsForGivenDate(@RequestParam(value = "userId") Long userId, @RequestParam(value = "date") String date) throws ParseException {
+
         Set<Tweet> tweets = userService.getUserTweetsForGivenDate(userId, date);
         return new ResponseEntity<>(tweets, HttpStatus.OK);
     }

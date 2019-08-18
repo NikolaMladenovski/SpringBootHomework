@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.sql.Date;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
@@ -51,7 +53,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void shouldGetUserTweetsForGivenDate() {
+    public void shouldGetUserTweetsForGivenDate() throws ParseException {
         User nikola = new User("nikola", "pass", "nikola@yahoo.com");
 
 
@@ -59,9 +61,9 @@ public class UserServiceImplTest {
         Tweet tweet2 = new Tweet("content2");
         Tweet tweet3 = new Tweet("content3");
 
-        tweet1.setDateOfCreation(LocalDate.of(2019, 7, 25));
-        tweet2.setDateOfCreation(LocalDate.of(2019, 8, 15));
-        tweet3.setDateOfCreation(LocalDate.of(2019, 8, 15));
+        tweet1.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 7, 25)));
+        tweet2.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 8, 15)));
+        tweet3.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 8, 15)));
 
         nikola.getListOfTweets().add(tweet1);
         nikola.getListOfTweets().add(tweet2);
@@ -71,7 +73,7 @@ public class UserServiceImplTest {
 
         Set<Tweet> expectedSet = Stream.of(tweet2, tweet3).collect(Collectors.toSet());
 
-        Set<Tweet> foundTweets = userServiceImpl.getUserTweetsForGivenDate(nikola.getId(), LocalDate.of(2019, 8, 15));
+        Set<Tweet> foundTweets = userServiceImpl.getUserTweetsForGivenDate(nikola.getId(), LocalDate.of(2019, 8, 15).toString());
 
         assertEquals(expectedSet, foundTweets);
 

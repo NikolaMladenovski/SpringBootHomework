@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.Set;
 
 @RestController
@@ -34,7 +35,7 @@ public class TweetRestController {
     }
 
     @GetMapping(value = "/getUserTweetsFromLastMonth")
-    public ResponseEntity<?> getUsersTweetedLastMonth() {
+    public ResponseEntity<?> getUsersTweetedLastMonth() throws ParseException {
         Set<User> users = tweetService.getUsersThatTweetedLastMonth();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

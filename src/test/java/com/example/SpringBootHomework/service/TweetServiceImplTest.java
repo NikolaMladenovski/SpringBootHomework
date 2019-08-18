@@ -4,7 +4,6 @@ import com.example.SpringBootHomework.exception.TweetNotFoundException;
 import com.example.SpringBootHomework.model.Tweet;
 import com.example.SpringBootHomework.model.User;
 import com.example.SpringBootHomework.repository.TweetRepository;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,22 +11,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.TestComponent;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Date;
+import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TweetServiceImplTest {
@@ -77,8 +71,8 @@ public class TweetServiceImplTest {
         Tweet tweet1 = new Tweet("content1");
         Tweet tweet2 = new Tweet("content2");
 
-        tweet1.setDateOfCreation(LocalDate.of(2019, 7, 15));
-        tweet2.setDateOfCreation(LocalDate.of(2019, 8, 15));
+        tweet1.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 7, 15)));
+        tweet2.setDateOfCreation(Date.valueOf(LocalDate.of(2019, 8, 15)));
 
         nikola.getListOfTweets().add(tweet1);
         tweet1.setUser(nikola);
@@ -88,9 +82,12 @@ public class TweetServiceImplTest {
 
         Set<Tweet> allTweetsSet = (Stream.of(tweet1, tweet2).collect(Collectors.toSet()));
         Mockito.when(tweetRepository.findAll()).thenReturn(allTweetsSet);
-
-        Set<User> foundUsersThatTweetedLastMonth = tweetServiceImpl.getUsersThatTweetedLastMonth();
-
+        Set<User> foundUsersThatTweetedLastMonth = new HashSet<>();
+        try {
+            foundUsersThatTweetedLastMonth = tweetServiceImpl.getUsersThatTweetedLastMonth();
+        }catch (ParseException exception){
+            System.out.println("Parse Exception......");
+        }
         Set<User> expectedUsersThatTweetedLastMonth = (Stream.of(nikola)).collect(Collectors.toSet());
 
         assertEquals(expectedUsersThatTweetedLastMonth, foundUsersThatTweetedLastMonth);

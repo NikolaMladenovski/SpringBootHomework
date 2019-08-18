@@ -7,7 +7,9 @@ import com.example.SpringBootHomework.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,8 +34,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<Tweet> getUserTweetsForGivenDate(Long userId, LocalDate date) throws UserNotFoundException {
+    public Set<Tweet> getUserTweetsForGivenDate(Long userId, String date) throws UserNotFoundException, ParseException {
             Optional<User> foundUser = userRepository.findById(userId);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateValue = simpleDateFormat.parse(date);
             if (!foundUser.isPresent()) {
                 throw new UserNotFoundException();
             }
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
                     .get()
                     .getListOfTweets()
                     .stream()
-                    .filter(tweet -> tweet.getDateOfCreation().equals(date))
+                    .filter(tweet -> tweet.getDateOfCreation().equals(dateValue))
                     .collect(Collectors.toSet());
             return userTweetsForGivenDate;
     }
